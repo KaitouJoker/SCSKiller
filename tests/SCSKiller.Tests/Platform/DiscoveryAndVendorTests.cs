@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using SCSKiller.Core;
 using SCSKiller.Core.Games;
 using SCSKiller.Core.Vendors;
@@ -1450,6 +1450,14 @@ public class DiscoveryAndVendorTests(ITestOutputHelper output)
             File.WriteAllBytes(Path.Combine(cs2, "cs2.exe"), new byte[300]);
             File.WriteAllBytes(Path.Combine(cs2, "vconsole2.exe"), new byte[500]);
             Assert.Equal(Path.Combine(cs2, "cs2.exe"), GameFiles.FindExe(Path.Combine(root, "Counter-Strike Global Offensive")));
+
+            var nte = Directory.CreateDirectory(Path.Combine(root, "Neverness to Everness")).FullName;
+            File.WriteAllBytes(Path.Combine(nte, "NTEGlobalLauncher.exe"), new byte[600]);
+            var nteEngine = Directory.CreateDirectory(Path.Combine(nte, "Client", "WindowsNoEditor", "Engine", "Binaries", "Win64")).FullName;
+            File.WriteAllBytes(Path.Combine(nteEngine, "UnrealGame.exe"), new byte[800]);
+            var nteGame = Directory.CreateDirectory(Path.Combine(nte, "Client", "WindowsNoEditor", "HT", "Binaries", "Win64")).FullName;
+            File.WriteAllBytes(Path.Combine(nteGame, "HTGame.exe"), new byte[400]);
+            Assert.Equal(Path.Combine(nteGame, "HTGame.exe"), GameFiles.FindExe(nte));
         }
         finally { Directory.Delete(root, true); }
     }

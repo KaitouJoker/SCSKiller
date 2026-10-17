@@ -4,6 +4,11 @@ All notable changes to the SCSKiller app and command line. Versions follow [Sema
 
 ## [Unreleased]
 
+### Games
+
+- **Neverness to Everness** on Steam is compiled for its game exe (`HTGame.exe`) and its bundled DirectX 12 Agility SDK
+  instead of its launcher (`NTEGlobalLauncher.exe`), which lacked the SDK and had every pipeline refused by the driver.
+
 ## [1.2.5] - 2026-10-10
 
 ### Faster and steadier

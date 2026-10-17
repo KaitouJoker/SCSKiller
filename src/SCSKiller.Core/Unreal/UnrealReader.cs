@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.ExceptionServices;
@@ -1107,6 +1107,7 @@ public sealed partial class UnrealReader(string? dataDir = null) : IEngineReader
             m => Array.IndexOf(["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"], m.Value.ToUpperInvariant()).ToString(),
             RegexOptions.IgnoreCase), "[^A-Za-z0-9]", "").ToLowerInvariant();
         var names = new[] { Norm(folder), Norm(Regex.Replace(exeName, "-Win(64|GDK)-Shipping$", "", RegexOptions.IgnoreCase)) }.Where(n => n.Length >= 4).ToList();
+        if (names.Contains("htgame")) names.Add("nevernesstoeverness");
         return Enum.GetValues<EGame>().Where(g => ((uint)g & 0xFFFF) != 0 && ((uint)g & 0xFFFF0000) is var b && b >= lo && b <= hi)
             .Select(g => (g, n: Norm(g.ToString()[5..]))).Where(x => x.n.Length >= 4 && names.Any(n => n.StartsWith(x.n) || x.n.StartsWith(n)))
             .OrderByDescending(x => names.Contains(x.n)).ThenByDescending(x => ((uint)x.g & 0xFFFF0000) == lo).ThenByDescending(x => x.n.Length)

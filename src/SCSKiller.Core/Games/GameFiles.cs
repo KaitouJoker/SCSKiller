@@ -131,10 +131,11 @@ public static class GameFiles
         Path.GetDirectoryName(exe) is { } dir && string.Equals(Path.GetFileName(Path.GetDirectoryName(dir)), "Binaries", StringComparison.OrdinalIgnoreCase)
         && Path.GetFileName(exe).EndsWith($"-{Path.GetFileName(dir)}-Shipping.exe", StringComparison.OrdinalIgnoreCase);
 
-    /// <summary>The &lt;Project&gt;\Binaries\Win* folders of the install root and of projects one or two levels under it. Win32
+    /// <summary>The &lt;Project&gt;\Binaries\Win* folders of the install root and of projects up to three levels under it. Win32
     /// is left out: a 32-bit exe never creates the game's D3D12 device.</summary>
     static IEnumerable<string> UnrealFolders(string installDir) =>
         Directory.EnumerateDirectories(installDir, "*", Flat)
+            .SelectMany(d => Directory.EnumerateDirectories(d, "*", Flat).Prepend(d))
             .SelectMany(d => Directory.EnumerateDirectories(d, "*", Flat).Prepend(d)).Prepend(installDir)
             .Select(p => Path.Combine(p, "Binaries"))
             .Where(Directory.Exists)
@@ -347,7 +348,7 @@ public static class GameFiles
         Path.GetRelativePath(installDir, Path.GetDirectoryName(path)!).Split(Path.DirectorySeparatorChar).Any(seg => Staging.Contains(seg, StringComparer.OrdinalIgnoreCase));
 
     static bool IsEngineFolder(string installDir, string path) =>
-        Path.GetRelativePath(installDir, path).StartsWith("Engine" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+        Path.GetRelativePath(installDir, Path.GetDirectoryName(path)!).Split(Path.DirectorySeparatorChar).Contains("Engine", StringComparer.OrdinalIgnoreCase);
 
     internal static readonly (string Name, AntiCheat Kind)[] Markers =
     [

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -291,6 +291,7 @@ public class UnrealReaderTests(ITestOutputHelper output)
         const CUE4Parse.UE4.Versions.EGame Ue55 = CUE4Parse.UE4.Versions.EGame.GAME_UE5_5, Ue57 = CUE4Parse.UE4.Versions.EGame.GAME_UE5_7,
             Nte = CUE4Parse.UE4.Versions.EGame.GAME_NevernessToEverness;
         Assert.Equal(Nte, UnrealReader.DetectFork(Ue55, Ue57, "Neverness to Everness", "HTGame"));
+        Assert.Equal(Nte, UnrealReader.DetectFork(Ue55, Ue57, "WindowsNoEditor", "HTGame"));
         Assert.Equal(Nte, UnrealReader.DetectFork(CUE4Parse.UE4.Versions.EGame.GAME_UE5_6, CUE4Parse.UE4.Versions.EGame.GAME_UE5_6, "Neverness To Everness", "HTGame"));
         Assert.NotEqual(Nte, UnrealReader.DetectFork(Ue55, Ue55, "Neverness to Everness", "HTGame"));
     }

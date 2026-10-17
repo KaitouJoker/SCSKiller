@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -424,7 +424,7 @@ public sealed partial class ScsKiller : IScsKiller
         if (!force && !userRequested && !Settings.ScanAtStart && Store.LoadList() is { } kept && kept.Build == CoreBuild && kept.Driver == DriverId
             && Store.LoadDiscovered(CoreBuild) is { Count: > 0 } listed)
             return Listed(started, kept.Games, listed);
-        var (found, unresolved) = Discover(Store.LoadDiscovered(CoreBuild), s => s.Discover(), fresh: userRequested);
+        var (found, unresolved) = Discover(Store.LoadDiscovered(CoreBuild), s => s.Discover(), fresh: force || userRequested);
         var states = new List<GameState>();
         var tickets = new List<long>();
         var driverStale = new List<bool>();
@@ -549,8 +549,8 @@ public sealed partial class ScsKiller : IScsKiller
         var claimed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var known = before.DistinctBy(g => g.Id).ToDictionary(g => g.Id);
         foreach (var source in _sources)
-            if (source is SteamSource steam) steam.Known = known;
-            else if (source is XboxSource xbox) xbox.Known = known;
+            if (source is SteamSource steam) steam.Known = fresh ? null : known;
+            else if (source is XboxSource xbox) xbox.Known = fresh ? null : known;
         foreach (var source in _sources)
             try
             {
